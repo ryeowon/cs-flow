@@ -5,6 +5,7 @@ import config as c
 from torchvision.datasets import ImageFolder
 from torch.utils.data import Dataset
 import numpy as np
+import model
 
 
 def t2np(tensor):
@@ -169,9 +170,10 @@ class Score_Observer:
             self.max_epoch = epoch
         if print_score:
             self.print_score()
+        return self.max_epoch
 
     def print_score(self):
-        print('{:s}: \t last: {:.4f} \t max: {:.4f} \t epoch_max: {:d} \t epoch_loss: {:d}'.format(self.name, self.last,
+        print('{:s}: \t last: {} \t max: {:.4f} \t epoch_max: {:d} \t epoch_loss: {:d}'.format(self.name, self.last,
                                                                                                    self.max_score,
                                                                                                    self.max_epoch,
                                                                                                    self.min_loss_epoch))

@@ -43,8 +43,9 @@ class FeatureExtractor(nn.Module):
     def __init__(self):
         super(FeatureExtractor, self).__init__()
         self.feature_extractor = EfficientNet.from_pretrained('efficientnet-b5')
+        #print(self.feature_extractor)
 
-    def eff_ext(self, x, use_layer=35):
+    def eff_ext(self, x, use_layer=35): # b5: 35, b0: 15
         x = self.feature_extractor._swish(self.feature_extractor._bn0(self.feature_extractor._conv_stem(x)))
         # Blocks
         for idx, block in enumerate(self.feature_extractor._blocks):
@@ -73,5 +74,12 @@ def save_model(model, filename):
 
 def load_model(filename):
     path = os.path.join(MODEL_DIR, filename)
-    model = torch.load(path)
+
+    # state dict load
+    model = get_cs_flow_model()
+    model.load_state_dict(torch.load(path))
+
+    # 전체 모델 load
+    # model = torch.load(path)
+
     return model

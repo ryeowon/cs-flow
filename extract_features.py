@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import torch
 from tqdm import tqdm
@@ -13,6 +14,7 @@ def extract(train_loader, test_loader, class_name):
     model.eval()
     with torch.no_grad():
         for name, loader in zip(['train', 'test'], [train_loader, test_loader]):
+            start_time = int(round(time.time() * 1000)) # ms
             features = [list() for _ in range(c.n_scales)]
             labels = list()
             for i, data in enumerate(tqdm(loader)):
@@ -28,7 +30,8 @@ def extract(train_loader, test_loader, class_name):
             if name == 'test':
                 labels = np.concatenate(labels)
                 np.save(export_dir + class_name + '_labels', labels)
-
+            end_time = int(round(time.time() * 1000)) # ms
+            print(name, 'extracting time: ', end_time-start_time, 'ms')
 
 export_name = c.class_name
 export_dir = 'data/features/' + export_name + '/'
